@@ -93,9 +93,22 @@ class LoginOut(BaseModel):
 @app.get(
     path="/",
     status_code=status.HTTP_200_OK,
-    tags=["Home"]
+    tags=["Home"],
+    summary="Home page",
     )
 def home():
+    """
+    Home page
+
+    This is the home page of the API.
+
+    Parameters:
+        None
+
+    Returns:
+        200:
+            - message: Welcome to the API!
+    """
     return {"Hello": "World!"}
 
 # Request and Response Body
@@ -104,9 +117,21 @@ def home():
     path="/person/new",
     response_model=PersonOut,
     status_code=status.HTTP_201_CREATED,
-    tags=["Persons"]
+    tags=["Persons"],
+    summary="Create Person in the app"
     )
 def create_person(person: Person = Body(...)):
+    """"
+    Create Person
+
+    This path operation creates a person in the app and save the information in the database.
+
+    Parameters:
+    - Request body parameter:
+        - **person: Person** -> A person model with first name, last name, age, hair color and marital status.
+
+    Return a person model with first name, last name, age, hair color and marital status.
+    """
     return person
 
 # Validaciones: Query Parameters
@@ -114,7 +139,8 @@ def create_person(person: Person = Body(...)):
 @app.get(
     path="/person/detail",
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
+    tags=["Persons"],
+    summary="Get Person detail",
     )
 def show_person(
     name: Optional[str] = Query(
@@ -131,6 +157,18 @@ def show_person(
         example="25"
         )
 ):
+    """
+    Get Person detail
+
+    This path operation shows the person detail.
+
+    Parameters:
+    - Query parameters:
+        - **name: str** -> The person name.
+        - **age: str** -> The person age.
+
+    Return a person model with first name, last name, age, hair color and marital status.
+    """
     return {name: age}
 
 # Validaciones Path Paremeters
@@ -140,7 +178,8 @@ persons = [1, 2, 3, 4, 5]
 @app.get(
     path="/person/detail/{person_id}",
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
+    tags=["Persons"],
+    summary="Get Person detail by ID"
     )
 def show_person(
     person_id: int = Path(
@@ -149,6 +188,17 @@ def show_person(
         example=123
     )
 ):
+    """
+    Get Person detail by ID
+
+    This path operation shows the person detail by ID.
+
+    Parameters:
+    - Path parameters:
+        - **person_id: int** -> The person ID.
+
+    Return a person model with first name, last name, age, hair color and marital status.
+    """
     if person_id not in persons:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -161,7 +211,8 @@ def show_person(
 @app.put(
     path="/person/{person_id}",
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
+    tags=["Persons"],
+    summary="Update Person detail by ID"
     )
 def update_person(
     person_id: int = Path(
@@ -174,6 +225,20 @@ def update_person(
     person: Person = Body(...),
     location: Location = Body(...)
 ):
+    """
+    Update Person detail by ID
+
+    This path operation updates the person detail by ID.
+
+    Parameters:
+    - Path parameters:
+        - **person_id: int** -> The person ID.
+    - Request body parameter:
+        - **person: Person** -> A person model with first name, last name, age, hair color and marital status.
+        - **location: Location** -> A location model with city, state and country.
+
+    Return a person model with first name, last name, age, hair color and marital status.
+    """
     #results = person.dict()
     #results.update(location.dict())
     #return results
@@ -185,16 +250,30 @@ def update_person(
     path="/login",
     response_model=LoginOut,
     status_code=status.HTTP_200_OK,
-    tags=["Persons"]
+    tags=["Persons"],
+    summary="Login"
 )
 def login(username: str = Form(...), password: str = Form(...)):
+    """
+    Login
+
+    This path operation login a person.
+
+    Parameters:
+    - Request body parameter:
+        - **username: str** -> The person username.
+        - **password: str** -> The person password.
+
+    Return a person model with first name, last name, age, hair color and marital status.
+    """
     return LoginOut(username=username)
 
 # Cookies and Headers Parameters
 @app.post(
     path="/contact",
     status_code=status.HTTP_200_OK,
-    tags=["Contact"]
+    tags=["Contact"],
+    summary="Contact"
 )
 def contact(
     first_name: str = Form(
@@ -215,17 +294,45 @@ def contact(
     user_agent: Optional[str] = Header(default=None),
     ads: Optional[str] = Cookie(default=None)
 ):
+    """
+    Contact
+
+    This path operation contact a person.
+
+    Parameters:
+    - Request body parameter:
+        - **first_name: str** -> The person first name.
+        - **last_name: str** -> The person last name.
+        - **email: EmailStr** -> The person email.
+        - **message: str** -> The person message.
+        - **user_agent: Optional[str]** -> The person user agent.
+        - **ads: Optional[str]** -> The person ads.
+
+    Return a person model with first name, last name, age, hair color and marital status.
+    """
     return user_agent
 
 # Files
 
 @app.post(
     path="/post-image",
-    tags=["Image"]
+    tags=["Image"],
+    summary="Post Image"
 )
 def post_image(
     image: UploadFile = File(...)
 ):
+    """
+    Post Image
+
+    This path operation post a image.
+
+    Parameters:
+    - Request body parameter:
+        - **image: UploadFile** -> The image.
+
+    Return a person model with first name, last name, age, hair color and marital status.
+    """
     return {
         "Filename": image.filename,
         "Format": image.content_type,
